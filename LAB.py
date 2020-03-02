@@ -20,8 +20,13 @@ def Hash_calculation():
 
 def Registry_insert(user):
 			digest = Hash_calculation()
-			key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Software\\Король", 0, winreg.KEY_ALL_ACCESS)
-			get = winreg.QueryValueEx(key,"Signature")[0]
+			try:
+				key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Software\\Король", 0, winreg.KEY_ALL_ACCESS)
+				get = winreg.QueryValueEx(key,"Signature")[0]
+			except Exception:
+				user.user.root.withdraw()
+				messagebox.showerror("Error", "NO ENTRY FOR Signature checking") 
+				user.root.destroy()
 			if str(get) != str(Hash_calculation()):
 				user.root.withdraw()
 				messagebox.showerror("Error", "WRONG HASH!") 
