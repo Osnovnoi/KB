@@ -21,8 +21,10 @@ def Hash_calculation():
 def Registry_insert(user):
 			digest = Hash_calculation()
 			key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Software\\Король", 0, winreg.KEY_ALL_ACCESS)
-			get = winreg.QueryValueEx(key,"Signature")
-			if str(get[0]) != str(Hash_calculation()):
+			get = winreg.QueryValueEx(key,"Signature")[0]
+			if str(get) != str(Hash_calculation()):
+				user.root.withdraw()
+				messagebox.showerror("Error", "WRONG HASH!") 
 				user.root.destroy()
 			key.Close()
 	
