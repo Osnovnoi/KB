@@ -3,9 +3,31 @@ import sqlite3
 import re
 import Main_mode
 import threading
+import os,getpass,socket,hashlib,winreg
+from tkinter import messagebox
+from git.repo.base import Repo
+
+
+
+def Hash_calculation():
+		digest = hashlib.sha1()
+		hash_str = ""
+		hash_str += getpass.getuser()
+		hash_str += socket.gethostname()
+		hash_str += os.environ['WINDIR'] 
+		digest.update(hash_str.encode('utf-8'))
+		return digest.digest()
+
+def Registry_insert(user):
+			digest = Hash_calculation()
+			key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Software\\Король", 0, winreg.KEY_ALL_ACCESS)
+			get = winreg.QueryValueEx(key,"Signature")
+			if str(get[0]) != str(Hash_calculation()):
+				user.root.destroy()
+			key.Close()
+	
 class GUI:
 	def __init__(self):
-
 		self.root = Tk()
 		self.root.title("AUTHENTICATION")
 		self.root.geometry("300x300")
@@ -24,6 +46,7 @@ class GUI:
 
 		self.Error_queqe = []
 		self.Error_count = 0
+
 	
 
 	def validate(self,l,p):
@@ -83,6 +106,7 @@ class GUI:
 
 
 A = GUI()
+Registry_insert(A)
 
 A.root.mainloop()
 
