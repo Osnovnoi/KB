@@ -17,7 +17,7 @@ def Hash_calculation():
 		hash_str += socket.gethostname()
 		hash_str += os.environ['WINDIR'] 
 		digest.update(hash_str.encode('utf-8'))
-		return digest.digest()
+		return digest.hexdigest()
 
 def Registry_insert(user):
 			digest = Hash_calculation()
@@ -33,7 +33,7 @@ def Registry_insert(user):
 				messagebox.showerror("Error", "WRONG HASH!") 
 				user.root.destroy()
 			key.Close()
-			decrypt_file(digest,"data,enc")
+			decrypt_file(get.encode(),"/sqlite/data.enc")
 
 
 
