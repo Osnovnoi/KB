@@ -33,7 +33,7 @@ def Registry_insert(user):
 				messagebox.showerror("Error", "WRONG HASH!") 
 				user.root.destroy()
 			key.Close()
-			decrypt_file(get.encode(),"/sqlite/data.enc")
+			decrypt_file(get.encode(),"sqlite/data.enc")
 
 
 
