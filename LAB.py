@@ -104,7 +104,7 @@ class GUI:
 		pass_hash = str(digest.hexdigest())
 
 		cursor = con.cursor()
-		cursor.execute("""SELECT LOGIN,PASSWD,Limitation,Status FROM USERS WHERE LOGIN = ? AND PASSWD = ?""",(login,pass,))
+		cursor.execute("""SELECT LOGIN,PASSWD,Limitation,Status FROM USERS WHERE LOGIN = ? AND PASSWD = ?""",(login,pass_hash,))
 		user_data = cursor.fetchone()
 		if not user_data or user_data == None:
 			self.Error_queqe.insert(-1,"Inccorect password or Login!")
