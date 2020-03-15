@@ -2,7 +2,7 @@ from tkinter  import *
 from tkinter  import messagebox
 import re
 import sqlite3
-import threading 
+import threading,hashlib
 
 ### Write a func to avoid sql-injections on new_password
 def Sql_injection_avoidance(passwd):
@@ -109,6 +109,10 @@ class User(Frame):
 				raise Exception ("Incorrect old Password or Invalid New")
 			con = sqlite3.connect('sqlite/data')
 			cursor = con.cursor()
+			digest = hashlib.sha1()
+			digest.update(new_pass.encode())
+			new_pass = str(digest.hexdigest())
+			
 			cursor.execute("""UPDATE USERS SET Passwd = ? Where LOGIN = ?""",(new_pass,self.login,))######
 	
 			con.commit()

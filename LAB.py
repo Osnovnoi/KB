@@ -10,7 +10,7 @@ from git.repo.base import Repo
 
 
 def Hash_calculation():
-		digest = hashlib.sha1()
+		digest = hashlib.md5()
 		hash_str = ""
 		hash_str += getpass.getuser()
 		hash_str += socket.gethostname()
@@ -32,6 +32,28 @@ def Registry_insert(user):
 				messagebox.showerror("Error", "WRONG HASH!") 
 				user.root.destroy()
 			key.Close()
+			decrypt_file(digest,"data,enc")
+
+
+
+
+def decrypt_file(key, in_filename, out_filename=None, chunksize=24*1024):
+    if not out_filename:
+        out_filename = os.path.splitext(in_filename)[0]
+
+    with open(in_filename, 'rb') as infile:
+        origsize = struct.unpack('<Q', infile.read(struct.calcsize('Q')))[0]
+        decryptor = AES.new(key, AES.MODE_ECB)
+
+        with open(out_filename, 'wb') as outfile:
+            while True:
+                chunk = infile.read(chunksize)
+                if len(chunk) == 0:
+                    break
+                outfile.write(decryptor.decrypt(chunk))
+
+            outfile.truncate(origsize)
+
 	
 class GUI:
 	def __init__(self):
@@ -75,8 +97,13 @@ class GUI:
 
 	def Authenticicate(self,login,passwd):
 		con = sqlite3.connect('sqlite/data')
+
+		digest = hashlib.sha1()
+		digest.update(passwd.encode())
+		pass_hash = str(digest.hexdigest())
+
 		cursor = con.cursor()
-		cursor.execute("""SELECT LOGIN,PASSWD,Limitation,Status FROM USERS WHERE LOGIN = ? AND PASSWD = ?""",(login,passwd,))
+		cursor.execute("""SELECT LOGIN,PASSWD,Limitation,Status FROM USERS WHERE LOGIN = ? AND PASSWD = ?""",(login,pass,))
 		user_data = cursor.fetchone()
 		if not user_data or user_data == None:
 			self.Error_queqe.insert(-1,"Inccorect password or Login!")
