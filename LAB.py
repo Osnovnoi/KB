@@ -3,11 +3,12 @@ import sqlite3
 import re
 import Main_mode
 import threading
-import os,getpass,socket,hashlib,winreg
+import getpass,socket,hashlib,winreg
 from tkinter import messagebox
 from git.repo.base import Repo
 
-
+import os, random, struct
+from Crypto.Cipher import AES
 
 def Hash_calculation():
 		digest = hashlib.md5()
