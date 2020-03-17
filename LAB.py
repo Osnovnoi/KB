@@ -159,7 +159,7 @@ class GUI:
 		os.remove("sqlite/data")
 		key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Software\\Король", 0, winreg.KEY_ALL_ACCESS)
 		get = winreg.QueryValueEx(key,"Signature")[0]
-		encrypt_file(get.encode(),str(os.getcwd()) + "sqlite\\data")
+		encrypt_file(get.encode(),str(os.getcwd()) + "\\sqlite\\data")
 		self.root.destroy()
 
 
