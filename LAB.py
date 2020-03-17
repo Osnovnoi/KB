@@ -36,7 +36,25 @@ def Registry_insert(user):
 			decrypt_file(get.encode(),"sqlite/data.enc")
 
 
+def encrypt_file(key, in_filename, out_filename=None, chunksize=64*1024):
+	    if not out_filename:
+	        out_filename = in_filename + '.enc'
 
+	    encryptor = AES.new(key, AES.MODE_ECB)
+	    filesize = os.path.getsize(in_filename)
+
+	    with open(in_filename, 'rb') as infile:
+	        with open(out_filename, 'wb') as outfile:
+	            outfile.write(struct.pack('<Q', filesize))
+
+	            while True:
+	                chunk = infile.read(chunksize)
+	                if len(chunk) == 0:
+	                    break
+	                elif len(chunk) % 16 != 0:
+	                    chunk += b' ' * (16 - len(chunk) % 16)
+
+	                outfile.write(encryptor.encrypt(chunk))
 
 def decrypt_file(key, in_filename, out_filename=None, chunksize=24*1024):
     if not out_filename:
@@ -137,12 +155,16 @@ class GUI:
 			task1 = threading.Thread(target =self.root.destroy())
 			Main_mode.Main_mode(user_data)
 
-
+	def on_closing(self):
+		os.remove("sqlite/data")
+		key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Software\\Король", 0, winreg.KEY_ALL_ACCESS)
+		get = winreg.QueryValueEx(key,"Signature")[0]
+		encrypt_file(get.encode(),"sqlite/data")
 
 
 A = GUI()
 Registry_insert(A)
-
+A.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 A.root.mainloop()
 
 
