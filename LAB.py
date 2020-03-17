@@ -156,7 +156,7 @@ class GUI:
 			Main_mode.Main_mode(user_data)
 
 	def on_closing(self):
-		os.remove("sqlite/data")
+		os.remove("sqlite/data.enc")
 		key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Software\\Король", 0, winreg.KEY_ALL_ACCESS)
 		get = winreg.QueryValueEx(key,"Signature")[0]
 		encrypt_file(get.encode(), "/sqlite/data")
